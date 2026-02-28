@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>🍌 Бонік та Дашуля</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root{--e:#064e3b;--em:#065f46;--el:#10b981;--y:#facc15;--yd:#eab308;--o:#f97316;--od:#ea580c;--g:rgba(255,255,255,.07);--gb:rgba(255,255,255,.13)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow:hidden;background:#064e3b;-webkit-font-smoothing:antialiased}
+    body{font-family:'Nunito',sans-serif;color:#fff}
+    #root{height:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+
+    /* ── Glass ── */
+    .glass{background:var(--g);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--gb);border-radius:20px}
+    .glass-gold{background:rgba(250,204,21,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(250,204,21,.25);border-radius:20px}
+    .glass-dark{background:rgba(0,0,0,.35);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:20px}
+
+    /* ── Page scroll ── */
+    .page-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-top:env(safe-area-inset-top,44px)}
+    .page-scroll::-webkit-scrollbar{display:none}
+
+    /* ── Page enter animation ── */
+    @keyframes pageEnter{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .page-enter{animation:pageEnter .45s cubic-bezier(.22,.68,0,1.2) both}
+
+    /* ── Shimmer ── */
+    .shimmer{background:linear-gradient(90deg,#facc15,#f97316,#facc15,#fef08a,#facc15);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+    @keyframes shimmer{0%{background-position:-300% center}100%{background-position:300% center}}
+
+    /* ── Glow pulse ── */
+    @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(250,204,21,.3),0 0 30px rgba(250,204,21,.1)}50%{box-shadow:0 0 40px rgba(250,204,21,.7),0 0 80px rgba(249,115,22,.3)}}
+    .glow{animation:glowPulse 2.5s ease-in-out infinite}
+
+    /* ── Float ── */
+    @keyframes floatA{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-20px) rotate(3deg)}}
+    @keyframes floatB{0%,100%{transform:translateY(0) rotate(15deg)}50%{transform:translateY(-16px) rotate(20deg)}}
+    @keyframes floatC{0%,100%{transform:translateY(0) rotate(5deg)}50%{transform:translateY(-10px) rotate(8deg)}}
+    .fa{animation:floatA 3.5s ease-in-out infinite}
+    .fb{animation:floatB 2.9s ease-in-out infinite .3s}
+    .fc{animation:floatC 3.8s ease-in-out infinite .7s}
+
+    /* ── Leaf sway ── */
+    @keyframes leafSway{0%,100%{transform:rotate(-7deg) scale(1)}50%{transform:rotate(7deg) scale(1.03)}}
+    .leaf{animation:leafSway 5s ease-in-out infinite;transform-origin:bottom center}
+    .leaf2{animation:leafSway 4s ease-in-out infinite .9s;transform-origin:bottom center}
+
+    /* ── Neon ── */
+    @keyframes neonY{0%,100%{text-shadow:0 0 8px #facc15,0 0 20px #facc15,0 0 40px #facc15}50%{text-shadow:0 0 15px #f97316,0 0 40px #f97316,0 0 80px #f97316}}
+    @keyframes neonG{0%,100%{text-shadow:0 0 8px #10b981,0 0 20px #10b981}50%{text-shadow:0 0 20px #06b6d4,0 0 50px #06b6d4}}
+    .neon-y{animation:neonY 2s ease-in-out infinite}
+    .neon-g{animation:neonG 2.5s ease-in-out infinite}
+
+    /* ── Twinkle ── */
+    @keyframes twinkle{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:1;transform:scale(1.3)}}
+
+    /* ── Confetti ── */
+    @keyframes confettiFall{0%{transform:translateY(-40px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(900deg);opacity:0}}
+
+    /* ── Map pulse ── */
+    @keyframes mapPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.9);opacity:0}}
+    .mp{animation:mapPulse 2.2s ease-in-out infinite}
+
+    /* ── Pop-in ── */
+    @keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+    .pop{animation:popIn .4s cubic-bezier(.22,.68,0,1.3) both}
+    .pop1{animation-delay:.07s}
+    .pop2{animation-delay:.14s}
+    .pop3{animation-delay:.21s}
+    .pop4{animation-delay:.28s}
+    .pop5{animation-delay:.35s}
+    .pop6{animation-delay:.42s}
+
+    /* ── Slide up ── */
+    @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .su{animation:slideUp .5s ease both}
+    .su1{animation-delay:.1s}
+    .su2{animation-delay:.2s}
+    .su3{animation-delay:.3s}
+    .su4{animation-delay:.4s}
+    .su5{animation-delay:.5s}
+    .su6{animation-delay:.6s}
+
+    /* ── Slide left ── */
+    @keyframes slideLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+    .sl0{animation:slideLeft .5s ease both;animation-delay:.1s}
+    .sl1{animation:slideLeft .5s ease both;animation-delay:.2s}
+    .sl2{animation:slideLeft .5s ease both;animation-delay:.3s}
+    .sl3{animation:slideLeft .5s ease both;animation-delay:.4s}
+
+    /* ── Buttons ── */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Nunito',sans-serif;font-weight:800;border:none;cursor:pointer;transition:transform .18s,box-shadow .18s;-webkit-tap-highlight-color:transparent;white-space:nowrap;font-size:.92rem}
+    .btn:active{transform:scale(.91)!important}
+    .btn-gold{background:linear-gradient(135deg,#facc15,#f97316);color:#064e3b;border-radius:50px;padding:14px 32px;box-shadow:0 8px 28px rgba(249,115,22,.35)}
+    .btn-gold:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 14px 36px rgba(249,115,22,.5)}
+    .btn-outline{background:transparent;color:#facc15;border:2px solid #facc15;border-radius:50px;padding:12px 26px}
+    .btn-outline:hover{background:#facc15;color:#064e3b;transform:scale(1.03)}
+
+    /* ── Tag ── */
+    .tag{display:inline-block;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.3);color:#facc15;padding:4px 16px;border-radius:50px;font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+
+    /* ── Bottom nav ── */
+    .bnav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(3,25,18,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(250,204,21,.15);padding-bottom:env(safe-area-inset-bottom,12px)}
+    .bnav-inner{display:flex;justify-content:space-around;align-items:center;height:58px;max-width:640px;margin:0 auto;padding:0 4px}
+    .bnav-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:6px 2px;min-width:50px;transition:transform .2s;-webkit-tap-highlight-color:transparent;user-select:none;position:relative}
+    .bnav-item:active{transform:scale(.86)}
+    .bnav-icon{font-size:1.3rem;transition:all .22s;line-height:1}
+    .bnav-label{font-size:.52rem;font-weight:700;color:rgba(255,255,255,.4);transition:color .22s;white-space:nowrap;letter-spacing:.2px}
+    .bnav-item.active .bnav-icon{transform:scale(1.22) translateY(-2px)}
+    .bnav-item.active .bnav-label{color:#facc15}
+    .bnav-dot{position:absolute;top:0;width:24px;height:2.5px;background:#facc15;border-radius:2px;transition:opacity .2s}
+
+    /* ── More drawer ── */
+    .more-drawer{position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,12px));left:0;right:0;z-index:895;background:rgba(2,20,12,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(250,204,21,.18);padding:14px 0}
+    @keyframes drawerUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+    @keyframes drawerDown{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}
+    .drawer-in{animation:drawerUp .28s ease both}
+
+    /* ── Flip card ── */
+    .flip-wrap{perspective:900px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .flip-inner{transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1);position:relative;height:100%}
+    .flip-inner.flipped{transform:rotateY(180deg)}
+    .flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;overflow:hidden}
+    .flip-back{transform:rotateY(180deg)}
+
+    /* ── Card hover ── */
+    .card-hover{transition:transform .3s,box-shadow .3s;cursor:pointer}
+    .card-hover:active{transform:scale(.96)}
+
+    /* ── Form inputs ── */
+    input,textarea{font-family:'Nunito',sans-serif;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);border-radius:14px;padding:13px 16px;color:#fff;font-size:.9rem;outline:none;width:100%;transition:border-color .2s}
+    input:focus,textarea:focus{border-color:#facc15}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,.3)}
+    textarea{resize:none}
+
+    /* ── Progress bar ── */
+    .prog-bar{background:rgba(255,255,255,.08);border-radius:50px;height:6px;overflow:hidden}
+    .prog-fill{height:100%;background:linear-gradient(90deg,#facc15,#f97316);border-radius:50px;transition:width .6s cubic-bezier(.22,.68,0,1.2)}
+
+    /* ── Recipe swipe ── */
+    @keyframes slideInRight{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideInLeft{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+    .recipe-right{animation:slideInRight .35s ease both}
+    .recipe-left{animation:slideInLeft .35s ease both}
+
+    /* ── Floating heart btn ── */
+    .fhb{position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom,12px));z-index:850;cursor:pointer;filter:drop-shadow(0 4px 12px rgba(249,115,22,.55));animation:floatB 3s ease-in-out infinite;border:none;background:none;padding:0}
+    .fhb:active{transform:scale(.82)!important;filter:drop-shadow(0 2px 6px rgba(249,115,22,.8))}
+    .fh-toast{position:absolute;bottom:110%;right:0;white-space:nowrap;background:rgba(250,204,21,.15);border:1px solid rgba(250,204,21,.4);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:50px;padding:8px 18px;font-weight:800;font-size:.88rem;color:#facc15}
+    @keyframes toastIn{from{opacity:0;transform:translateY(10px) scale(.85)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-14px)}}
+    .toast-in{animation:toastIn .3s cubic-bezier(.22,.68,0,1.3) both}
+    .toast-out{animation:toastOut .3s ease both}
+    .burst-particle{position:absolute;top:50%;left:50%;pointer-events:none;font-size:1rem}
+    @keyframes burst{from{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(calc(-50% + var(--bx)),calc(-50% + var(--by))) scale(0)}}
+
+    /* ── Night stars ── */
+    .star{position:fixed;border-radius:50%;pointer-events:none;animation:twinkle var(--sd) ease-in-out var(--dl) infinite}
+
+    /* ── Playfair ── */
+    .pf{font-family:'Playfair Display',serif}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ══════════════════════════════════
+   SVG КОМПОНЕНТИ
+══════════════════════════════════ */
+const MonkeyBonik = ({ size = 140 }) => (
+  <svg width={size} height={size} viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="70" cy="133" rx="28" ry="5.5" fill="rgba(0,0,0,.22)"/>
+    <ellipse cx="70" cy="95" rx="30" ry="34" fill="#92400e"/>
+    <ellipse cx="70" cy="100" rx="18" ry="22" fill="#d97706" opacity=".55"/>
+    <circle cx="70" cy="52" r="30" fill="#92400e"/>
+    <ellipse cx="70" cy="60" rx="20" ry="15" fill="#d97706" opacity=".65"/>
+    <circle cx="59" cy="48" r="6" fill="white"/>
+    <circle cx="81" cy="48" r="6" fill="white"/>
+    <circle cx="60.5" cy="49" r="3.5" fill="#1c1917"/>
+    <circle cx="82.5" cy="49" r="3.5" fill="#1c1917"/>
+    <circle cx="61.5" cy="47.5" r="1.2" fill="white"/>
+    <circle cx="83.5" cy="47.5" r="1.2" fill="white"/>
+    <ellipse cx="70" cy="58" rx="7" ry="5" fill="#92400e"/>
+    <circle cx="67" cy="58" r="2.3" fill="#1c1917"/>
+    <circle cx="73" cy="58" r="2.3" fill="#1c1917"/>
+    <path d="M60 66 Q70 74 80 66" stroke="#1c1917" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+    <circle cx="40" cy="52" r="11" fill="#92400e"/>
+    <circle cx="40" cy="52" r="6.5" fill="#d97706" opacity=".6"/>
+    <circle cx="100" cy="52" r="11" fill="#92400e"/>
+    <circle cx="100" cy="52" r="6.5" fill="#d97706" opacity=".6"/>
+    <path d="M41 84 Q20 98 22 118" stroke="#92400e" strokeWidth="13" fill="none" strokeLinecap="round"/>
+    <path d="M99 84 Q120 98 118 118" stroke="#92400e" strokeWidth="13" fill="none" strokeLinecap="round"/>
+    <circle cx="22" cy="120" r="8" fill="#d97706"/>
+    <circle cx="118" cy="120" r="8" fill="#d97706"/>
+    <path d="M54 126 Q46 135 42 138" stroke="#92400e" strokeWidth="11" fill="none" strokeLinecap="round"/>
+    <path d="M86 126 Q94 135 98 138" stroke="#92400e" strokeWidth="11" fill="none" strokeLinecap="round"/>
+    <polygon points="46,24 55,8 64,20 70,4 76,20 85,8 94,24 94,30 46,30" fill="#facc15"/>
+    <circle cx="55" cy="10" r="3.5" fill="#f97316"/>
+    <circle cx="70" cy="5" r="3.5" fill="#f97316"/>
+    <circle cx="85" cy="10" r="3.5" fill="#f97316"/>
+    <path d="M62 96 C62 93 66 91 70 95 C74 91 78 93 78 96 C78 100 70 106 70 106Z" fill="#facc15"/>
+    <path d="M100 104 Q124 92 122 72 Q120 56 136 50" stroke="#92400e" strokeWidth="9" fill="none" strokeLinecap="round"/>
+  </svg>
+);
+
+const BananaSVG = ({ size = 52, rot = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 80 80" style={{transform:`rotate(${rot}deg)`}}>
+    <path d="M22 66 Q5 42 16 20 Q32 4 57 7 Q72 9 74 22 Q62 18 46 20 Q26 26 24 52Z" fill="#facc15"/>
+    <path d="M22 66 Q5 42 16 20 Q32 4 57 7" stroke="#eab308" strokeWidth="2.5" fill="none"/>
+    <path d="M16 20 Q19 13 26 9" stroke="#92400e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    <path d="M27 23 Q24 39 30 56" stroke="#eab308" strokeWidth="1.5" fill="none" opacity=".55"/>
+  </svg>
+);
+
+const LeafSVG = ({ size = 110, flip = false }) => (
+  <svg width={size} height={size} viewBox="0 0 110 110" style={{transform: flip ? 'scaleX(-1)' : undefined}}>
+    <path d="M55 102 Q10 68 18 18 Q55 2 96 18 Q106 68 55 102Z" fill="#16a34a" opacity=".75"/>
+    <path d="M55 102 Q55 55 55 9" stroke="rgba(255,255,255,.2)" strokeWidth="2" fill="none"/>
+  </svg>
+);
+
+const CrownSVG = ({ size = 110 }) => (
+  <svg width={size} height={size} viewBox="0 0 120 100">
+    <defs>
+      <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fef08a"/>
+        <stop offset="50%" stopColor="#facc15"/>
+        <stop offset="100%" stopColor="#f97316"/>
+      </linearGradient>
+    </defs>
+    <polygon points="10,85 10,38 28,60 60,10 92,60 110,38 110,85" fill="url(#cg)" stroke="#f97316" strokeWidth="2"/>
+    <rect x="10" y="85" width="100" height="12" rx="4" fill="#eab308"/>
+    <circle cx="10" cy="38" r="7" fill="#f97316"/>
+    <circle cx="60" cy="10" r="7" fill="#f97316"/>
+    <circle cx="110" cy="38" r="7" fill="#f97316"/>
+    <circle cx="35" cy="68" r="5" fill="white" opacity=".7"/>
+    <circle cx="60" cy="68" r="5" fill="white" opacity=".7"/>
+    <circle cx="85" cy="68" r="5" fill="white" opacity=".7"/>
+  </svg>
+);
+
+const StarSVG = ({ fill = "#facc15", size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20">
+    <polygon points="10,1 12.9,7 19.5,7.6 14.8,12 16.4,18.5 10,15 3.6,18.5 5.2,12 .5,7.6 7.1,7" fill={fill}/>
+  </svg>
+);
+
+const BananaHeart = ({ size = 48 }) => (
+  <svg width={size} height={size} viewBox="0 0 60 60">
+    <path d="M30 52C30 52 8 38 8 24C8 16 14 10 22 10C26 10 30 13 30 13C30 13 34 10 38 10C46 10 52 16 52 24C52 38 30 52 30 52Z" fill="#f97316"/>
+    <text x="30" y="35" textAnchor="middle" fontSize="20">🍌</text>
+  </svg>
+);
+
+/* ══════════════════════════════════
+   FLOATING BANANA HEART
+══════════════════════════════════ */
+function FloatingHeart() {
+  const [show, setShow] = useState(false);
+  const [bursts, setBursts] = useState([]);
+  const timerRef = useRef();
+
+  const handleClick = () => {
+    clearTimeout(timerRef.current);
+    setShow(true);
+    setBursts([0,1,2,3,4,5,6,7].map(i => ({ id: Date.now()+i, angle: i*45 })));
+    timerRef.current = setTimeout(() => { setShow(false); setBursts([]); }, 2600);
+  };
+
+  return (
+    <button className="fhb" onClick={handleClick} aria-label="Дашуля">
+      {show && (
+        <div className="fh-toast toast-in" style={{position:'absolute',bottom:'115%',right:0}}>Дашуля ❤️</div>
+      )}
+      {bursts.map(b => {
+        const rad = (b.angle * Math.PI) / 180;
+        const bx = Math.cos(rad) * 54;
+        const by = Math.sin(rad) * 54;
+        return (
+          <span key={b.id} className="burst-particle"
+            style={{'--bx':`${bx}px`,'--by':`${by}px`,animation:`burst .65s ease forwards`}}>🍌</span>
+        );
+      })}
+      <BananaHeart size={48}/>
+    </button>
+  );
+}
+
+/* ══════════════════════════════════
+   BOTTOM NAVIGATION
+══════════════════════════════════ */
+const NAV_MAIN = [
+  {id:0,icon:'🏠',label:'Дім'},
+  {id:1,icon:'📜',label:'Легенда'},
+  {id:2,icon:'🐒',label:'Зграя'},
+  {id:3,icon:'🗺️',label:'Карта'},
+  {id:4,icon:'🛒',label:'Крамниця'},
+];
+const NAV_MORE = [
+  {id:5,icon:'💪',label:'Сила'},
+  {id:6,icon:'🌙',label:'Ніч'},
+  {id:7,icon:'🍌',label:'Шеф'},
+  {id:8,icon:'🌿',label:"Плем'я"},
+  {id:9,icon:'👑',label:'Трон'},
+];
+
+function BottomNav({ page, setPage }) {
+  const [open, setOpen] = useState(false);
+  const moreActive = NAV_MORE.some(n => n.id === page);
+
+  const go = (id) => { setPage(id); setOpen(false); };
+
+  return (
+    <>
+      {open && (
+        <div className="more-drawer drawer-in">
+          <div style={{display:'flex',justifyContent:'space-around',maxWidth:420,margin:'0 auto'}}>
+            {NAV_MORE.map(n => (
+              <div key={n.id} className={`bnav-item${page===n.id?' active':''}`} onClick={() => go(n.id)}>
+                <div className="bnav-icon">{n.icon}</div>
+                <div className="bnav-label">{n.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <nav className="bnav">
+        <div className="bnav-inner">
+          {NAV_MAIN.map(n => (
+            <div key={n.id} className={`bnav-item${page===n.id?' active':''}`} onClick={() => { go(n.id); setOpen(false); }}>
+              {page===n.id && <div className="bnav-dot"/>}
+              <div className="bnav-icon">{n.icon}</div>
+              <div className="bnav-label">{n.label}</div>
+            </div>
+          ))}
+          <div className={`bnav-item${moreActive?' active':''}`} onClick={() => setOpen(o => !o)}>
+            {moreActive && <div className="bnav-dot"/>}
+            <div className="bnav-icon">{open ? '✕' : '⋯'}</div>
+            <div className="bnav-label">{open ? 'Закрити' : 'Ще'}</div>
+          </div>
+        </div>
+      </nav>
+    </>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 1 — ГОЛОВНА
+══════════════════════════════════ */
+function HomePage({ onNav }) {
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at 35% 0%,#066147 0%,#064e3b 45%,#021d14 100%)'}}>
+      <div style={{position:'absolute',top:50,left:-30,pointerEvents:'none'}} className="leaf">
+        <LeafSVG size={160}/>
+      </div>
+      <div style={{position:'absolute',top:80,right:-35,pointerEvents:'none'}} className="leaf2">
+        <LeafSVG size={120} flip/>
+      </div>
+      <div style={{position:'absolute',top:130,right:22,pointerEvents:'none',opacity:.7}} className="fb">
+        <BananaSVG size={58} rot={-35}/>
+      </div>
+      <div style={{position:'absolute',top:290,left:14,pointerEvents:'none',opacity:.55}} className="fc">
+        <BananaSVG size={42} rot={15}/>
+      </div>
+
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'24px 20px 0',textAlign:'center',gap:18}}>
+        <div className="su"><span className="tag">🌴 Тропічна пригода для двох</span></div>
+
+        <div className="fa su1" style={{filter:'drop-shadow(0 16px 40px rgba(250,204,21,.38))'}}>
+          <MonkeyBonik size={164}/>
+        </div>
+
+        <div className="su2 pf" style={{lineHeight:1.08}}>
+          <div style={{fontSize:'clamp(2rem,8vw,3.2rem)',fontWeight:900,color:'white'}}>Привіт,</div>
+          <div className="shimmer" style={{fontSize:'clamp(2.5rem,11vw,4.2rem)',fontWeight:900,display:'block'}}>Дашулю! 🍌</div>
+        </div>
+
+        <div className="glass glow su3" style={{borderRadius:24,padding:'18px 24px',maxWidth:340,width:'100%'}}>
+          <div style={{fontSize:'2rem',marginBottom:8}}>💛</div>
+          <p style={{color:'rgba(255,255,255,.82)',lineHeight:1.75,fontWeight:600,fontSize:'.9rem'}}>
+            Бонік — мавпочка-авантюрист — дуже чекав на тебе. Разом ви вирушаєте на пошуки легендарного <strong style={{color:'#facc15'}}>Золотого Банана</strong>!
+          </p>
+        </div>
+
+        <div className="su4" style={{display:'flex',gap:14,flexWrap:'wrap',justifyContent:'center'}}>
+          <button className="btn btn-gold" onClick={() => onNav(1)}>🍌 Почати пригоду</button>
+          <button className="btn btn-outline" onClick={() => onNav(2)}>🐒 Зустріти зграю</button>
+        </div>
+
+        <div className="su5" style={{display:'flex',gap:14,justifyContent:'center',flexWrap:'wrap',paddingBottom:30}}>
+          {[['1 200+','Бананів з\'їдено'],['7','Печер відкрито'],['∞','Любові 💛']].map(([v,l]) => (
+            <div key={l} className="glass" style={{borderRadius:16,padding:'12px 18px',textAlign:'center'}}>
+              <div style={{fontSize:'1.35rem',fontWeight:900,color:'#facc15'}}>{v}</div>
+              <div style={{fontSize:'.62rem',color:'rgba(255,255,255,.5)',marginTop:3,fontWeight:600}}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 2 — ЛЕГЕНДА
+══════════════════════════════════ */
+function LegendPage() {
+  const chs = [
+    {emoji:'🌅',color:'#facc15',title:'Зустріч під золотим місяцем',text:'У найглибшій частині Смарагдових джунглів Бонік побачив крізь листя сяйво — це була Дашуля. Серце мавпеняти гулко застукотіло в ритм тропічного дощу.'},
+    {emoji:'🍌',color:'#f97316',title:'Пророцтво Золотого Банана',text:'Стара папуга проголосила: «Лише той, хто знайде Золотий Банан, отримає найбільший скарб — вічну любов і нескінченний запас бананових смузі!» Очі Дашулі засяяли.'},
+    {emoji:'⚔️',color:'#8b5cf6',title:'Тернистий шлях',text:'Разом вони подолали Річку крокодилів, переконали Раду Сов показати дорогу та врятували маленьке мавпеня, що застрягло у ліані. Кожна мить — нова легенда.'},
+    {emoji:'👑',color:'#10b981',title:'Тріумф двох сердець',text:'На вершині Сонячної гори Бонік і Дашуля знайшли Золотий Банан — і зрозуміли: найважливіший скарб не він. Він — це вони разом. Джунглі вибухнули квітами!'},
+  ];
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at top,#075e42 0%,#064e3b 55%,#6b2411 100%)'}}>
+      <div style={{padding:'24px 16px 20px'}}>
+        <div style={{textAlign:'center',marginBottom:32}} className="su">
+          <span className="tag">📜 Наша легенда</span>
+          <h2 className="pf" style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10,lineHeight:1.1}}>
+            Казка про <span className="shimmer">Боніка і Дашулю</span>
+          </h2>
+        </div>
+
+        <div style={{position:'relative',maxWidth:520,margin:'0 auto'}}>
+          <div style={{position:'absolute',left:24,top:0,bottom:0,width:2,background:'linear-gradient(to bottom,#facc15,#f97316,#facc15)',opacity:.28}}/>
+          {chs.map((ch,i) => (
+            <div key={i} className={`sl${i}`} style={{display:'flex',gap:14,marginBottom:22,alignItems:'flex-start'}}>
+              <div style={{width:46,height:46,borderRadius:'50%',background:`linear-gradient(135deg,${ch.color},${ch.color}88)`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.35rem',flexShrink:0,zIndex:1,boxShadow:`0 0 18px ${ch.color}55`}}>
+                {ch.emoji}
+              </div>
+              <div className="glass" style={{borderRadius:18,padding:'14px 16px',flex:1,borderLeft:`3px solid ${ch.color}55`}}>
+                <h3 style={{fontWeight:800,fontSize:'.92rem',color:ch.color,marginBottom:7}}>{ch.title}</h3>
+                <p style={{color:'rgba(255,255,255,.74)',lineHeight:1.75,fontSize:'.82rem'}}>{ch.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="glass-gold su6" style={{borderRadius:24,padding:22,maxWidth:520,margin:'0 auto 20px',textAlign:'center'}}>
+          <div style={{fontSize:'1.7rem',marginBottom:8}}>💛</div>
+          <p className="pf" style={{fontStyle:'italic',color:'#fef08a',lineHeight:1.8,fontSize:'.95rem',fontWeight:700}}>
+            «Хто знайде Золотий Банан разом зі своїм серцем — той знайшов усе.»
+          </p>
+          <p style={{color:'rgba(255,255,255,.35)',fontSize:'.7rem',marginTop:9,fontWeight:600}}>— Мудрість Смарагдових джунглів</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 3 — ЗГРАЯ (FLIP CARDS)
+══════════════════════════════════ */
+function TroopPage() {
+  const [flipped, setFlipped] = useState(null);
+  const monkeys = [
+    {name:'Тамарін Золотий',habitat:'Амазонія',emoji:'🐒',rarity:'Легендарний',color:'#facc15',back:'Єдиний, чиє хутро сяє яскравіше за Золотий Банан. Охороняє скарбницю джунглів від злодіїв.'},
+    {name:'Гаркун-Воїн',habitat:'Центральна Америка',emoji:'🦍',rarity:'Рідкісний',color:'#f97316',back:'Його крик чути за 7 км. Ніхто не наважується вкрасти банани на його священній території.'},
+    {name:'Павук-Танцюрист',habitat:'Пд. Америка',emoji:'🐒',rarity:'Епічний',color:'#8b5cf6',back:'Жонглює 12 бананами одночасно. Виступає при місяці для Боніка і Дашулі кожної ночі.'},
+    {name:'Мандрил-Мудрець',habitat:'Захід Африки',emoji:'🦊',rarity:'Mythічний',color:'#ec4899',back:'Знає 999 рецептів з банана і 3 секретні. Особисто навчив Дашулю готувати смузі.'},
+    {name:'Капуцин-Кухар',habitat:'Бразилія',emoji:'🐒',rarity:'Звичайний',color:'#10b981',back:'Автор фірмового «Бананового крему Дашулі». Кажуть, один стакан дарує щастя на тиждень.'},
+    {name:'Носач-Страж',habitat:'Борнео',emoji:'🐒',rarity:'Рідкісний',color:'#06b6d4',back:'Рахує кожен банан у джунглях. Ніколи не помиляється. Ідеальний скарбник племені.'},
+  ];
+  const rg = {Легендарний:'rgba(250,204,21,.45)',Рідкісний:'rgba(249,115,22,.38)',Епічний:'rgba(139,92,246,.38)',Mythічний:'rgba(236,72,153,.42)',Звичайний:'rgba(16,185,129,.28)'};
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at top,#064e3b 0%,#021d14 100%)'}}>
+      <div style={{padding:'24px 12px 20px'}}>
+        <div style={{textAlign:'center',marginBottom:22}} className="su">
+          <span className="tag">🐒 Захисники джунглів</span>
+          <h2 className="pf" style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10}}>
+            Зграя <span className="shimmer">Боніка</span>
+          </h2>
+          <p style={{color:'rgba(255,255,255,.45)',fontSize:'.76rem',marginTop:5}}>Натисни на картку — дізнаєшся секрет 🤫</p>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(152px,1fr))',gap:13}}>
+          {monkeys.map((m,i) => (
+            <div key={i} className={`flip-wrap pop pop${i+1}`}
+              style={{height:210,borderRadius:20,boxShadow:`0 8px 28px ${rg[m.rarity]}`,border:`1px solid ${m.color}28`}}
+              onClick={() => setFlipped(flipped===i ? null : i)}>
+              <div className={`flip-inner${flipped===i?' flipped':''}`}>
+                {/* Front */}
+                <div className="flip-front glass" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:14,gap:7}}>
+                  <div style={{width:60,height:60,borderRadius:'50%',background:`radial-gradient(circle,${m.color}30,${m.color}0a)`,border:`2px solid ${m.color}50`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.9rem'}}>{m.emoji}</div>
+                  <div style={{fontWeight:800,fontSize:'.85rem',textAlign:'center',lineHeight:1.2}}>{m.name}</div>
+                  <span style={{background:`${m.color}1e`,border:`1px solid ${m.color}44`,color:m.color,padding:'2px 10px',borderRadius:50,fontSize:'.58rem',fontWeight:700}}>{m.rarity}</span>
+                  <div style={{color:'rgba(255,255,255,.38)',fontSize:'.64rem'}}>📍 {m.habitat}</div>
+                  <div style={{display:'flex',gap:2}}>{[1,2,3,4,5].map(s => <StarSVG key={s} size={11}/>)}</div>
+                </div>
+                {/* Back */}
+                <div className="flip-back" style={{background:`linear-gradient(145deg,${m.color}20,rgba(0,0,0,.65))`,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:16,textAlign:'center',gap:10,borderRadius:20}}>
+                  <div style={{fontSize:'1.7rem'}}>🤫</div>
+                  <p style={{color:'rgba(255,255,255,.85)',fontSize:'.76rem',lineHeight:1.65}}>{m.back}</p>
+                  <div style={{color:m.color,fontSize:'.64rem',fontWeight:700}}>↩ Назад</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 4 — МАПА ПРИГОД
+══════════════════════════════════ */
+function MapPage() {
+  const [active, setActive] = useState(null);
+  const zones = [
+    {id:0,x:18,y:22,icon:'🌊',name:'Водоспад бананів',color:'#06b6d4',memory:'Тут Бонік і Дашуля разом наловили золотих рибок. Сміялись до сліз від щастя!',fact:'Висота водоспаду — 47 м. Рівно стільки, скільки Бонік з\'їв бананів за сніданок.'},
+    {id:1,x:57,y:14,icon:'🌴',name:'Великий Намет',color:'#10b981',memory:'Тут Дашулі вручили «Золотий Пальм-Лист Пошани» за неймовірну хоробрість.',fact:'Дерево росте 2000 років. Його коріння глибше, ніж кохання Боніка до Дашулі.'},
+    {id:2,x:76,y:28,icon:'🌋',name:'Вулкан Смаку',color:'#f97316',memory:'З вулкана тече не лава, а гарячий шоколадно-бананний фондю. Дашуля зробила селфі!',fact:'Температура фондю — 42°С. Ідеально для романтичного вечора на двох.'},
+    {id:3,x:34,y:58,icon:'💎',name:'Кришталеві Печери',color:'#8b5cf6',memory:'Луна повторювало «Дашуля» 17 разів. Бонік кричав навмисно, дивлячись їй в очі.',fact:'Кристали ростуть 1 мм на рік — так само, як щастя від спільних пригод.'},
+    {id:4,x:60,y:55,icon:'🏛️',name:'Золотий Храм',color:'#facc15',memory:'Тут Бонік урочисто вручив Дашулі перший Золотий Банан. Вона плакала від радості.',fact:'Храм збудований 500 років тому. Вхід — лише для обраних. Дашуля — обрана.'},
+    {id:5,x:24,y:76,icon:'🏪',name:'Мавпячий Базар',color:'#ec4899',memory:'Дашуля за 10 хвилин виторгувала 3 банани, ліану та урок акробатики. Геніально!',fact:'Приймають лише бананові монети. Курс: 1 банан = 1 безмежна усмішка.'},
+  ];
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at 60% 20%,#065f46 0%,#022c22 85%)'}}>
+      <div style={{padding:'24px 14px 20px'}}>
+        <div style={{textAlign:'center',marginBottom:18}} className="su">
+          <span className="tag">🗺️ Наші спогади</span>
+          <h2 className="pf" style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10}}>
+            Мапа <span className="shimmer">пригод</span>
+          </h2>
+          <p style={{color:'rgba(255,255,255,.45)',fontSize:'.76rem',marginTop:4}}>Натисни на точку — відкриєш спогад 💛</p>
+        </div>
+
+        <div className="glass su2" style={{borderRadius:22,overflow:'hidden',position:'relative'}}>
+          <svg viewBox="0 0 100 100" style={{width:'100%',aspectRatio:'1',display:'block'}}>
+            <defs>
+              <radialGradient id="mg" cx="50%" cy="50%">
+                <stop offset="0%" stopColor="#065f46"/><stop offset="100%" stopColor="#022c22"/>
+              </radialGradient>
+            </defs>
+            <rect width="100" height="100" fill="url(#mg)"/>
+            <ellipse cx="28" cy="38" rx="20" ry="14" fill="#064e3b" opacity=".8"/>
+            <ellipse cx="64" cy="28" rx="24" ry="16" fill="#065f46" opacity=".6"/>
+            <ellipse cx="50" cy="64" rx="26" ry="17" fill="#064e3b" opacity=".7"/>
+            <path d="M8 18 Q42 33 36 56 Q30 70 62 82 Q82 87 92 76" stroke="#06b6d4" strokeWidth="1.8" fill="none" opacity=".4"/>
+            {zones.map(z => (
+              <g key={z.id} onClick={() => setActive(active===z.id?null:z.id)} style={{cursor:'pointer'}}>
+                <circle cx={z.x} cy={z.y} r="5.5" fill={z.color} opacity=".25" className="mp" style={{animationDelay:`${z.id*.35}s`}}/>
+                <circle cx={z.x} cy={z.y} r="2.8" fill={z.color} style={{filter:`drop-shadow(0 0 4px ${z.color})`}}/>
+                <text x={z.x} y={z.y-4.5} textAnchor="middle" fontSize="4" fill="white">{z.icon}</text>
+              </g>
+            ))}
+          </svg>
+          <div style={{position:'absolute',bottom:10,right:12,color:'rgba(255,255,255,.28)',fontSize:'.6rem'}}>Натисни на 📍</div>
+        </div>
+
+        {active !== null ? (
+          <div key={active} className="glass-gold su1" style={{borderRadius:22,padding:18,marginTop:14}}>
+            <div style={{display:'flex',gap:14,alignItems:'flex-start'}}>
+              <div style={{fontSize:'2rem'}}>{zones[active].icon}</div>
+              <div style={{flex:1}}>
+                <h3 style={{fontWeight:800,color:zones[active].color,marginBottom:6,fontSize:'.95rem'}}>{zones[active].name}</h3>
+                <p style={{color:'#fef08a',fontSize:'.8rem',lineHeight:1.65,marginBottom:7}}>💛 <em>{zones[active].memory}</em></p>
+                <p style={{color:'rgba(255,255,255,.5)',fontSize:'.74rem',lineHeight:1.55}}>💡 {zones[active].fact}</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="glass" style={{borderRadius:20,padding:18,marginTop:14,textAlign:'center'}}>
+            <span style={{fontSize:'2rem'}}>🗺️</span>
+            <p style={{color:'rgba(255,255,255,.38)',fontSize:'.8rem',marginTop:8}}>Натисни на будь-яку точку — відкриєш спільний спогад Боніка і Дашулі</p>
+          </div>
+        )}
+
+        <div style={{display:'flex',gap:7,flexWrap:'wrap',marginTop:13,paddingBottom:10}}>
+          {zones.map(z => (
+            <div key={z.id} onClick={() => setActive(active===z.id?null:z.id)}
+              style={{display:'flex',alignItems:'center',gap:5,padding:'5px 13px',borderRadius:50,cursor:'pointer',transition:'all .2s',
+                background:active===z.id?`${z.color}1e`:'rgba(255,255,255,.05)',
+                border:`1px solid ${active===z.id?z.color+'55':'rgba(255,255,255,.1)'}`}}>
+              <span style={{fontSize:'.85rem'}}>{z.icon}</span>
+              <span style={{fontSize:'.66rem',fontWeight:700,color:active===z.id?z.color:'rgba(255,255,255,.55)'}}>{z.name.split(' ')[0]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 5 — КРАМНИЦЯ
+══════════════════════════════════ */
+function ShopPage() {
+  const [cart, setCart] = useState(0);
+  const [added, setAdded] = useState(null);
+  const prods = [
+    {name:"Набір «Золотий Банан»",price:'980 грн',old:'1 390 грн',emoji:'🍌',badge:'Хіт',stars:5},
+    {name:"Худі «Мавпяча Королева»",price:'2 200 грн',old:'3 100 грн',emoji:'👑',badge:'Нове',stars:4},
+    {name:'Рюкзак мандрівниці',price:'3 600 грн',old:null,emoji:'🎒',badge:'Ліміт',stars:5},
+    {name:'М\'яка іграшка Бонік XL',price:'1 250 грн',old:'1 680 грн',emoji:'🐒',badge:'♥',stars:5},
+    {name:"Свічки «Листя банана»",price:'780 грн',old:null,emoji:'🕯️',badge:null,stars:4},
+    {name:'Торбинка зграї',price:'560 грн',old:'700 грн',emoji:'👜',badge:'Sale',stars:4},
+  ];
+  const addToCart = (i) => {
+    setCart(c => c+1);
+    setAdded(i);
+    setTimeout(() => setAdded(null), 1200);
+  };
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at 20% 80%,#6b2411 0%,#064e3b 42%,#022c22 100%)'}}>
+      <div style={{padding:'24px 12px 20px'}}>
+        <div style={{textAlign:'center',marginBottom:18}} className="su">
+          <span className="tag">🛒 Преміум крамниця</span>
+          <h2 className="pf" style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10}}>
+            Бананова <span className="shimmer">Крамниця</span>
+          </h2>
+          <div style={{display:'inline-flex',alignItems:'center',gap:8,marginTop:11,padding:'7px 18px',borderRadius:50,background:'rgba(250,204,21,.11)',border:'1px solid rgba(250,204,21,.28)',transition:'transform .3s',transform:cart>0?'scale(1.08)':'scale(1)'}}>
+            <span>🛒</span>
+            <span style={{color:'#facc15',fontWeight:800,fontSize:'.85rem'}}>{cart} товар(ів) у кошику</span>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(150px,1fr))',gap:12}}>
+          {prods.map((p,i) => (
+            <div key={i} className={`glass card-hover pop pop${Math.min(i+1,6)}`} style={{borderRadius:20,padding:13,position:'relative',overflow:'hidden'}}>
+              {p.badge && <div style={{position:'absolute',top:9,left:9,background:p.badge==='Sale'?'#f97316':'#facc15',color:'#064e3b',padding:'2px 8px',borderRadius:50,fontSize:'.58rem',fontWeight:800}}>{p.badge}</div>}
+              <div style={{width:'100%',aspectRatio:'1',borderRadius:13,background:'linear-gradient(135deg,rgba(250,204,21,.1),rgba(249,115,22,.06))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'2.7rem',marginBottom:10}}>{p.emoji}</div>
+              <div style={{fontWeight:800,fontSize:'.78rem',marginBottom:5,lineHeight:1.3}}>{p.name}</div>
+              <div style={{display:'flex',gap:1,marginBottom:6}}>{[...Array(5)].map((_,s) => <StarSVG key={s} size={11} fill={s<p.stars?'#facc15':'rgba(255,255,255,.15)'}/>)}</div>
+              <div style={{display:'flex',alignItems:'baseline',gap:5,marginBottom:10}}>
+                <span style={{color:'#facc15',fontWeight:900,fontSize:'.88rem'}}>{p.price}</span>
+                {p.old && <span style={{color:'rgba(255,255,255,.25)',textDecoration:'line-through',fontSize:'.65rem'}}>{p.old}</span>}
+              </div>
+              <button className="btn btn-gold" style={{width:'100%',padding:'9px 8px',fontSize:'.74rem',transition:'all .35s',background:added===i?'linear-gradient(135deg,#10b981,#06b6d4)':'linear-gradient(135deg,#facc15,#f97316)'}}
+                onClick={() => addToCart(i)}>
+                {added===i ? '✓ Додано!' : 'До кошика 🍌'}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 6 — ЗАЛ СИЛИ
+══════════════════════════════════ */
+function FitnessPage() {
+  const [prog, setProg] = useState({});
+  const [xp, setXp] = useState(0);
+  const ws = [
+    {name:'Гойдання на ліанах',reps:'3 × 15',icon:'🍃',muscle:'Спина та кор',level:'Початківець',xp:20},
+    {name:'Берпі на дерево',reps:'4 × 10',icon:'🌴',muscle:'Все тіло',level:'Просунутий',xp:40},
+    {name:'Жим Золотого Банана',reps:'3 × 12',icon:'🍌',muscle:'Груди',level:'Середній',xp:30},
+    {name:"Присідання «Мавпяча сила»",reps:'5 × 20',icon:'💪',muscle:'Ноги',level:'Середній',xp:30},
+    {name:'Спринт по кронах',reps:'6 × 30с',icon:'⚡',muscle:'Кардіо',level:'Просунутий',xp:40},
+    {name:'Рівновага на хвості',reps:'3 × 60с',icon:'🐒',muscle:'Кор',level:'Початківець',xp:20},
+  ];
+  const lc = {Початківець:'#10b981',Середній:'#f97316',Просунутий:'#ef4444'};
+  const totalXP = ws.reduce((s,w) => s+w.xp, 0);
+  const rank = xp>=totalXP*.8 ? '🦍 Альфа-Мавпа' : xp>=totalXP*.4 ? '🐒 Мавпа-Воїн' : '🌱 Мавпенятко';
+  const log = (i) => {
+    const cur = prog[i]||0;
+    if(cur>=100) return;
+    const next = Math.min(cur+20,100);
+    setProg(p => ({...p,[i]:next}));
+    setXp(x => x+ws[i].xp);
+  };
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at top right,#1a0606 0%,#064e3b 42%,#022c22 100%)'}}>
+      <div style={{padding:'24px 14px 20px'}}>
+        <div style={{textAlign:'center',marginBottom:18}} className="su">
+          <span className="tag">💪 Мавпяча сила</span>
+          <h2 className="pf" style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10}}>
+            Зал <span className="shimmer">сили Дашулі</span>
+          </h2>
+          <p style={{color:'rgba(255,255,255,.5)',fontSize:'.78rem',marginTop:5}}>Тренуйся як Бонік. Їж банани. Підкори джунглі.</p>
+        </div>
+
+        <div className="glass-gold su2" style={{borderRadius:20,padding:'14px 18px',marginBottom:16}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+            <div>
+              <div style={{fontWeight:800,color:'#facc15',fontSize:'.92rem'}}>{rank}</div>
+              <div style={{color:'rgba(255,255,255,.45)',fontSize:'.68rem'}}>Досвід: {xp} / {totalXP} XP</div>
+            </div>
+            <span style={{fontSize:'1.8rem'}}>🏆</span>
+          </div>
+          <div className="prog-bar">
+            <div className="prog-fill" style={{width:`${(xp/totalXP)*100}%`}}/>
+          </div>
+        </div>
+
+        <div style={{display:'flex',gap:10,justifyContent:'center',marginBottom:16}}>
+          {[['🔥','1 240','Ккал/тиж'],['⚡','47 хв','Сер. трен'],['🍌','8','Банан/день']].map(([ic,v,l]) => (
+            <div key={l} className="glass" style={{flex:1,borderRadius:16,padding:'11px 6px',textAlign:'center'}}>
+              <div style={{fontSize:'1.2rem'}}>{ic}</div>
+              <div style={{fontWeight:900,color:'#facc15',fontSize:'.92rem'}}>{v}</div>
+              <div style={{fontSize:'.58rem',color:'rgba(255,255,255,.38)',fontWeight:600}}>{l}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{display:'flex',flexDirection:'column',gap:11}}>
+          {ws.map((w,i) => (
+            <div key={i} className={`glass sl${Math.min(i,3)}`} style={{borderRadius:18,padding:'13px 14px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:11}}>
+                <span style={{fontSize:'1.5rem',flexShrink:0}}>{w.icon}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:3,gap:6}}>
+                    <div style={{fontWeight:800,fontSize:'.84rem',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.name}</div>
+                    <span style={{background:`${lc[w.level]}1e`,color:lc[w.level],border:`1px solid ${lc[w.level]}44`,padding:'1px 7px',borderRadius:50,fontSize:'.56rem',fontWeight:700,flexShrink:0}}>{w.level}</span>
+                  </div>
+                  <div style={{color:'rgba(255,255,255,.38)',fontSize:'.66rem',marginBottom:5}}>🎯 {w.muscle} • {w.reps}</div>
+                  <div className="prog-bar">
+                    <div className="prog-fill" style={{width:`${prog[i]||0}%`}}/>
+                  </div>
+                </div>
+                <button onClick={() => log(i)} style={{flexShrink:0,padding:'7px 11px',borderRadius:50,border:`1px solid ${prog[i]===100?'#10b98144':'#facc1540'}`,background:prog[i]===100?'rgba(16,185,129,.18)':'rgba(250,204,21,.12)',color:prog[i]===100?'#10b981':'#facc15',fontFamily:"'Nunito'",fontWeight:800,fontSize:'.66rem',cursor:'pointer',transition:'all .2s'}}>
+                  {prog[i]===100 ? '✓' : '+Підхід'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 7 — НІЧНІ ДЖУНГЛІ
+══════════════════════════════════ */
+function NightPage() {
+  const [neon, setNeon] = useState(true);
+  const cards = [
+    {icon:'🌙',title:'Нічне бенкетування',text:'Коли сонце сідає, банани починають світитись золотом.',glow:'#facc15'},
+    {icon:'⚡',title:'Електричні ліани',text:'Біолюмінесцентні ліани освітлюють підлогу лісу.',glow:'#06b6d4'},
+    {icon:'🦋',title:'Неонові метелики',text:'Фосфоресцентні метелики ведуть додому заблуканих мавп.',glow:'#8b5cf6'},
+    {icon:'🌟',title:'Зоряні банани',text:'Рідкісні банани, що дозрівають лише під місяцем.',glow:'#ec4899'},
+    {icon:'🔥',title:'Фестиваль світлячків',text:'Щоповнолуння світлячки влаштовують шоу для Боніка.',glow:'#f97316'},
+    {icon:'💫',title:'Світлий Ставок',text:'Озеро з люмінесцентною водою дарує чарівні мрії.',glow:'#10b981'},
+  ];
+  const stars = Array.from({length:28},(_,i) => ({
+    id:i,left:(i*37.3)%100,top:(i*23.7)%100,
+    size:(i%3)+1,op:.2+(i%5)*.12,
+    sd:`${2+(i%3)}s`,dl:`${(i*.4)%3}s`
+  }));
+  return (
+    <div className="page-scroll page-enter" style={{background:neon?'radial-gradient(ellipse at top,#060612 0%,#0a0a20 100%)':'radial-gradient(ellipse at top,#0a1a0a 0%,#061206 100%)',transition:'background .6s'}}>
+      {neon && stars.map(s => (
+        <div key={s.id} className="star" style={{left:`${s.left}%`,top:`${s.top}%`,width:s.size,height:s.size,background:'#facc15',opacity:s.op,'--sd':s.sd,'--dl':s.dl}}/>
+      ))}
+      <div style={{padding:'24px 14px 20px',position:'relative',zIndex:1}}>
+        <div style={{textAlign:'center',marginBottom:22}} className="su">
+          <span className="tag" style={{background:neon?'rgba(250,204,21,.1)':'rgba(16,185,129,.1)',borderColor:neon?'rgba(250,204,21,.3)':'rgba(16,185,129,.3)',color:neon?'#facc15':'#10b981'}}>🌙 Нічний режим</span>
+          <h2 className={`pf ${neon?'neon-y':'neon-g'}`} style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10,color:neon?'#facc15':'#10b981'}}>
+            Нічні <span style={{color:neon?'#f97316':'#06b6d4'}}>Джунглі</span>
+          </h2>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:14,marginTop:14}}>
+            <span style={{color:'rgba(255,255,255,.45)',fontSize:'.8rem',fontWeight:700}}>🌿 Ліс</span>
+            <div onClick={() => setNeon(n => !n)}
+              style={{width:54,height:27,borderRadius:14,background:neon?'#facc15':'#10b981',position:'relative',cursor:'pointer',transition:'background .3s',boxShadow:`0 0 18px ${neon?'rgba(250,204,21,.55)':'rgba(16,185,129,.55)'}`}}>
+              <div style={{width:21,height:21,borderRadius:'50%',background:'white',position:'absolute',top:3,transition:'left .3s',left:neon?30:3}}/>
+            </div>
+            <span style={{color:'rgba(255,255,255,.45)',fontSize:'.8rem',fontWeight:700}}>⚡ Неон</span>
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(148px,1fr))',gap:12}}>
+          {cards.map((c,i) => (
+            <div key={i} className={`card-hover pop pop${Math.min(i+1,6)}`}
+              style={{borderRadius:18,padding:'15px 13px',
+                background:neon?'rgba(18,18,40,.82)':'rgba(10,38,18,.82)',
+                border:`1px solid ${c.glow}30`,
+                boxShadow:neon?`0 0 16px ${c.glow}15,inset 0 0 14px ${c.glow}05`:'none',
+                transition:'all .4s',cursor:'pointer'}}>
+              <div style={{fontSize:'1.75rem',marginBottom:10,filter:neon?`drop-shadow(0 0 7px ${c.glow})`:'none',transition:'filter .4s'}}>{c.icon}</div>
+              <div style={{fontWeight:800,color:neon?c.glow:'white',marginBottom:7,fontSize:'.82rem',textShadow:neon?`0 0 10px ${c.glow}`:'none',transition:'all .4s'}}>{c.title}</div>
+              <p style={{color:'rgba(255,255,255,.48)',fontSize:'.72rem',lineHeight:1.6}}>{c.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div style={{marginTop:20,textAlign:'center'}}>
+          <div style={{display:'inline-block',padding:'11px 22px',borderRadius:50,background:neon?'rgba(250,204,21,.07)':'rgba(16,185,129,.07)',border:`1px solid ${neon?'#facc15':'#10b981'}25`,transition:'all .4s'}}>
+            <span className={neon?'neon-y':'neon-g'} style={{fontWeight:900,fontSize:'.88rem',color:neon?'#facc15':'#10b981'}}>
+              Дашуля — зірка нічних джунглів ✨
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 8 — ШЕФ-КУХАР (SWIPE)
+══════════════════════════════════ */
+function ChefPage() {
+  const [idx, setIdx] = useState(0);
+  const [dir, setDir] = useState('right');
+  const [anim, setAnim] = useState(false);
+  const recs = [
+    {name:"Смузі «Золотий Світанок»",time:'5 хв',kcal:280,emoji:'🌅',color:'#facc15',
+      ing:['2 стиглих банани','1 склянка манго','200 мл кокосового молока','1 ст.л. меду','Кубики льоду'],
+      steps:['Очисти і наріж банани','Додай усі фрукти до блендера','Влий кокосове молоко і мед','Збий до шовковистості','Подавай зі скибочкою банана']},
+    {name:"Коктейль «Сила Джунглів»",time:'7 хв',kcal:420,emoji:'💪',color:'#f97316',
+      ing:['3 заморожені банани','2 ст.л. арахісового масла','1 мірна ложка протеїну','250 мл мигдального молока','Кориця до смаку'],
+      steps:['Заморозь банани на ніч','Завантаж усе у блендер','Збий 60 с на максимумі','Перелий у стакан','Прикрась крупою какао']},
+    {name:'Смарагдовий Детокс',time:'5 хв',kcal:190,emoji:'🌿',color:'#10b981',
+      ing:['1 банан','2 жмені шпинату','½ авокадо','Сік 1 лайма','200 мл кокосової води'],
+      steps:['Спочатку шпинат і вода','Банан і авокадо зверху','Видави свіжий лайм','Збий до однорідності','Прикрась листям м\'яти']},
+    {name:"Нічний крем Дашулі",time:'10 хв',kcal:350,emoji:'🌙',color:'#8b5cf6',
+      ing:['2 банани','100 мл темних вершків','2 ст.л. какао','Ванільна паста','Морська сіль','Крупи какао'],
+      steps:['Збий банани з вершками','Додай какао і ваніль','Збивай до глянцю','Перелий в охолоджений бокал','Посип крупами какао']},
+  ];
+  const swipe = (d) => {
+    setDir(d);
+    setAnim(false);
+    setTimeout(() => {
+      setIdx(i => (i + (d==='right'?1:-1) + recs.length) % recs.length);
+      setAnim(true);
+    }, 10);
+  };
+  const r = recs[idx];
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at bottom left,#064e3b 0%,#022c22 100%)'}}>
+      <div style={{padding:'24px 14px 20px'}}>
+        <div style={{textAlign:'center',marginBottom:18}} className="su">
+          <span className="tag">👨‍🍳 Кухня Боніка</span>
+          <h2 className="pf" style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10}}>
+            Бананові <span className="shimmer">Рецепти</span>
+          </h2>
+          <p style={{color:'rgba(255,255,255,.4)',fontSize:'.72rem',marginTop:4}}>← Натисни стрілки →</p>
+        </div>
+
+        <div key={idx} className={`glass ${dir==='right'?'recipe-right':'recipe-left'}`}
+          style={{borderRadius:24,padding:20,border:`1px solid ${r.color}30`,marginBottom:14}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14,flexWrap:'wrap',gap:10}}>
+            <div>
+              <div style={{fontSize:'2.6rem',marginBottom:7}}>{r.emoji}</div>
+              <h3 className="pf" style={{fontWeight:900,color:r.color,fontSize:'1rem'}}>{r.name}</h3>
+              <div style={{display:'flex',gap:12,marginTop:5}}>
+                <span style={{color:'rgba(255,255,255,.4)',fontSize:'.7rem'}}>⏱ {r.time}</span>
+                <span style={{color:'rgba(255,255,255,.4)',fontSize:'.7rem'}}>🔥 {r.kcal} ккал</span>
+              </div>
+            </div>
+            <button className="btn btn-gold" style={{padding:'8px 16px',fontSize:'.7rem'}}>Зберегти</button>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+            <div>
+              <div style={{fontWeight:800,color:'#facc15',fontSize:'.66rem',letterSpacing:1,textTransform:'uppercase',marginBottom:9}}>🌿 Інгредієнти</div>
+              {r.ing.map((ing,j) => (
+                <div key={j} style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
+                  <div style={{width:4,height:4,borderRadius:'50%',background:r.color,flexShrink:0}}/>
+                  <span style={{color:'rgba(255,255,255,.75)',fontSize:'.73rem'}}>{ing}</span>
+                </div>
+              ))}
+            </div>
+            <div>
+              <div style={{fontWeight:800,color:'#facc15',fontSize:'.66rem',letterSpacing:1,textTransform:'uppercase',marginBottom:9}}>👨‍🍳 Кроки</div>
+              {r.steps.map((step,j) => (
+                <div key={j} style={{display:'flex',gap:7,marginBottom:6}}>
+                  <div style={{width:17,height:17,borderRadius:'50%',background:`${r.color}22`,border:`1px solid ${r.color}50`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.58rem',fontWeight:800,color:r.color,flexShrink:0}}>{j+1}</div>
+                  <span style={{color:'rgba(255,255,255,.65)',fontSize:'.7rem',lineHeight:1.5}}>{step}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:16,paddingBottom:10}}>
+          <button onClick={() => swipe('left')} style={{width:40,height:40,borderRadius:'50%',background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.15)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.1rem',color:'white',fontWeight:700,transition:'transform .15s'}}
+            onMouseDown={e => e.currentTarget.style.transform='scale(.88)'} onMouseUp={e => e.currentTarget.style.transform='scale(1)'} onTouchStart={e => e.currentTarget.style.transform='scale(.88)'} onTouchEnd={e => e.currentTarget.style.transform='scale(1)'}>‹</button>
+          <div style={{display:'flex',gap:8}}>
+            {recs.map((_,i) => (
+              <div key={i} onClick={() => {setDir(i>idx?'right':'left');setTimeout(()=>setIdx(i),10);}}
+                style={{width:8,height:8,borderRadius:'50%',cursor:'pointer',transition:'all .25s',transform:i===idx?'scale(1.1)':'scale(.8)',background:i===idx?'#facc15':'rgba(255,255,255,.25)'}}/>
+            ))}
+          </div>
+          <button onClick={() => swipe('right')} style={{width:40,height:40,borderRadius:'50%',background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.15)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.1rem',color:'white',fontWeight:700,transition:'transform .15s'}}
+            onMouseDown={e => e.currentTarget.style.transform='scale(.88)'} onMouseUp={e => e.currentTarget.style.transform='scale(1)'} onTouchStart={e => e.currentTarget.style.transform='scale(.88)'} onTouchEnd={e => e.currentTarget.style.transform='scale(1)'}>›</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 9 — ПЛЕМ'Я (ФОРМА)
+══════════════════════════════════ */
+function TribePage({ onNav }) {
+  const [form, setForm] = useState({name:'',email:'',role:'',msg:''});
+  const [sent, setSent] = useState(false);
+  const roles = ["🐒 Збирачка бананів","🌴 Мандрівниця джунглів","👑 Ватажок племені","🍌 Шеф-кухар зграї","💪 Мавпяча Атлетка"];
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at 70% 20%,#065f46 0%,#022c22 100%)'}}>
+      <div style={{padding:'24px 14px 20px'}}>
+        <div style={{textAlign:'center',marginBottom:22}} className="su">
+          <span className="tag">🤝 Спільнота</span>
+          <h2 className="pf" style={{fontWeight:900,fontSize:'clamp(1.7rem,6vw,2.8rem)',marginTop:10}}>
+            Стати частиною <span className="shimmer">легенди</span>
+          </h2>
+          <p style={{color:'rgba(255,255,255,.45)',fontSize:'.78rem',marginTop:5}}>Долучися до зграї Боніка і Дашулі 💛</p>
+        </div>
+
+        {!sent ? (
+          <div className="glass su2" style={{borderRadius:26,padding:'22px 16px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
+              <div>
+                <label style={{display:'block',color:'rgba(255,255,255,.45)',fontSize:'.64rem',fontWeight:700,letterSpacing:1.2,textTransform:'uppercase',marginBottom:6}}>Ім'я</label>
+                <input value={form.name} onChange={e => setForm({...form,name:e.target.value})} placeholder="Дашуля"/>
+              </div>
+              <div>
+                <label style={{display:'block',color:'rgba(255,255,255,.45)',fontSize:'.64rem',fontWeight:700,letterSpacing:1.2,textTransform:'uppercase',marginBottom:6}}>Пошта</label>
+                <input type="email" value={form.email} onChange={e => setForm({...form,email:e.target.value})} placeholder="мавпа@джунглі.ua"/>
+              </div>
+            </div>
+            <div style={{marginBottom:14}}>
+              <label style={{display:'block',color:'rgba(255,255,255,.45)',fontSize:'.64rem',fontWeight:700,letterSpacing:1.2,textTransform:'uppercase',marginBottom:8}}>Твоя роль у зграї</label>
+              <div style={{display:'flex',gap:7,flexWrap:'wrap'}}>
+                {roles.map(r => (
+                  <button key={r} onClick={() => setForm({...form,role:r})} style={{padding:'6px 13px',borderRadius:50,border:`1.5px solid ${form.role===r?'#facc15':'rgba(255,255,255,.14)'}`,background:form.role===r?'rgba(250,204,21,.14)':'transparent',color:form.role===r?'#facc15':'rgba(255,255,255,.5)',cursor:'pointer',fontSize:'.7rem',fontFamily:"'Nunito'",fontWeight:700,transition:'all .2s'}}>
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{marginBottom:18}}>
+              <label style={{display:'block',color:'rgba(255,255,255,.45)',fontSize:'.64rem',fontWeight:700,letterSpacing:1.2,textTransform:'uppercase',marginBottom:6}}>Чому ти заслуговуєш місця у зграї?</label>
+              <textarea rows={3} value={form.msg} onChange={e => setForm({...form,msg:e.target.value})} placeholder="Розкажи Бонікові..."/>
+            </div>
+            <button className="btn btn-gold" style={{width:'100%',padding:14,fontSize:'.93rem'}} onClick={() => {if(form.name&&form.email)setSent(true);}}>
+              🐒 Приєднатись до легенди!
+            </button>
+            <p style={{textAlign:'center',color:'rgba(255,255,255,.22)',fontSize:'.66rem',marginTop:9}}>Ніякого спаму — тільки банани та любов 🍌</p>
+          </div>
+        ) : (
+          <div className="su" style={{textAlign:'center',padding:'20px 0'}}>
+            <div style={{fontSize:'4rem',marginBottom:14}}>🎉</div>
+            <h2 className="pf" style={{fontWeight:900,fontSize:'2rem',color:'#facc15',marginBottom:12}}>Вітаємо у зграї!</h2>
+            <p style={{color:'rgba(255,255,255,.72)',lineHeight:1.8,fontSize:'.9rem',maxWidth:300,margin:'0 auto 22px'}}>
+              Ласкаво просимо, <strong style={{color:'white'}}>{form.name}</strong>! Бонік особисто радіє мати тебе як <em style={{color:'#facc15'}}>{form.role||'члена зграї'}</em>. 🐒💛
+            </p>
+            <button className="btn btn-gold" onClick={() => onNav(9)}>👑 Зайняти свій трон!</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   PAGE 10 — ТРОН ДАШУЛІ 👑
+══════════════════════════════════ */
+const COLORS = ['#facc15','#f97316','#10b981','#ec4899','#8b5cf6','#06b6d4','#fff','#fef08a'];
+const confettiData = Array.from({length:90},(_,i) => ({
+  id:i, color:COLORS[i%COLORS.length],
+  x:(i*11.3)%100, size:5+(i%8), dur:2.4+(i%4)*.65,
+  delay:(i*.072)%3.6, circle:i%3===0
+}));
+
+function ThronePage({ onNav }) {
+  const [showConf, setShowConf] = useState(true);
+  return (
+    <div className="page-scroll page-enter" style={{background:'radial-gradient(ellipse at center,#5c1a08 0%,#064e3b 45%,#022c22 100%)'}}>
+      {showConf && (
+        <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:999,overflow:'hidden'}}>
+          {confettiData.map(p => (
+            <div key={p.id} style={{position:'absolute',left:`${p.x}%`,top:'-5%',width:p.size,height:p.circle?p.size:p.size*1.6,borderRadius:p.circle?'50%':'2px',background:p.color,animation:`confettiFall ${p.dur}s linear ${p.delay}s infinite`}}/>
+          ))}
+        </div>
+      )}
+
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'30px 20px 20px',textAlign:'center',gap:15,position:'relative',zIndex:1}}>
+        <button onClick={() => setShowConf(c => !c)} style={{position:'absolute',top:16,right:16,background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.15)',borderRadius:50,padding:'5px 14px',fontSize:'.68rem',color:'rgba(255,255,255,.45)',cursor:'pointer',fontFamily:"'Nunito'"}}>
+          {showConf ? '✕ Конфеті' : '🎉 Конфеті'}
+        </button>
+
+        <div className="su"><span className="tag">👑 Найвищий досягнутець</span></div>
+
+        <div className="fa su1" style={{filter:'drop-shadow(0 0 40px rgba(250,204,21,.85)) drop-shadow(0 0 70px rgba(249,115,22,.45))'}}>
+          <CrownSVG size={128}/>
+        </div>
+
+        <div className="su2 pf" style={{lineHeight:1.08}}>
+          <div className="shimmer" style={{fontSize:'clamp(2.2rem,10vw,3.8rem)',fontWeight:900,display:'block'}}>Трон Дашулі</div>
+          <div style={{fontSize:'clamp(1rem,4vw,1.5rem)',color:'rgba(255,255,255,.68)',marginTop:6}}>👑 Ти — Королева Джунглів! 👑</div>
+        </div>
+
+        <div className="glass-gold glow su3" style={{borderRadius:24,padding:'18px 20px',maxWidth:350,width:'100%'}}>
+          <div style={{fontSize:'1.9rem',marginBottom:9}}>💛🐒💛</div>
+          <p className="pf" style={{fontStyle:'italic',color:'#fef08a',lineHeight:1.8,fontSize:'.92rem',fontWeight:700}}>
+            «Дашуля, ти підкорила джунглі, опанувала смузі, перемогла всі виклики — і назавжди зайняла найважливіше місце: в серці Боніка.»
+          </p>
+          <div style={{color:'rgba(255,255,255,.35)',fontSize:'.66rem',marginTop:9,fontWeight:600}}>— Бонік, особисто ✍️</div>
+        </div>
+
+        <div className="glass su4" style={{borderRadius:22,padding:'16px 24px',textAlign:'center'}}>
+          <div style={{fontSize:'2.7rem',marginBottom:7}}>🏆</div>
+          <div style={{fontWeight:900,color:'#facc15',fontSize:'.95rem',marginBottom:3}}>Легендарний Майстер Банана</div>
+          <div style={{color:'rgba(255,255,255,.35)',fontSize:'.67rem'}}>Сертифіковано Боніком • З любов'ю, назавжди</div>
+          <div style={{display:'flex',gap:3,justifyContent:'center',marginTop:9}}>
+            {[1,2,3,4,5].map(s => <StarSVG key={s} size={15}/>)}
+          </div>
+        </div>
+
+        <div className="su5" style={{display:'flex',gap:9,flexWrap:'wrap',justifyContent:'center'}}>
+          {[['🍌','Гуру банана'],['🐒','Підкорила мавп'],['🌴','Цар джунглів'],['💪','Сила природи'],['✨','Легенда']].map(([ic,n]) => (
+            <div key={n} className="glass" style={{borderRadius:14,padding:'9px 13px',textAlign:'center'}}>
+              <div style={{fontSize:'1.3rem'}}>{ic}</div>
+              <div style={{fontSize:'.56rem',color:'rgba(255,255,255,.45)',marginTop:2,fontWeight:700}}>{n}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="su6" style={{fontSize:'3.2rem',letterSpacing:10}}>🐒💛🌟</div>
+
+        <div style={{display:'flex',gap:12,flexWrap:'wrap',justifyContent:'center',paddingBottom:24}}>
+          <button className="btn btn-gold" onClick={() => onNav(0)}>🏠 На початок</button>
+          <button className="btn btn-outline" onClick={() => onNav(8)}>🐒 Запросити</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════
+   ROOT APP
+══════════════════════════════════ */
+function App() {
+  const [page, setPage] = useState(0);
+  const goTo = (n) => setPage(n);
+
+  const pages = [
+    <HomePage key={page===0?'h':'h2'} onNav={goTo}/>,
+    <LegendPage key={page===1?'l':'l2'}/>,
+    <TroopPage key={page===2?'t':'t2'}/>,
+    <MapPage key={page===3?'m':'m2'}/>,
+    <ShopPage key={page===4?'s':'s2'}/>,
+    <FitnessPage key={page===5?'f':'f2'}/>,
+    <NightPage key={page===6?'n':'n2'}/>,
+    <ChefPage key={page===7?'c':'c2'}/>,
+    <TribePage key={page===8?'tr':'tr2'} onNav={goTo}/>,
+    <ThronePage key={page===9?'th':'th2'} onNav={goTo}/>,
+  ];
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',height:'100%',height:'100dvh',overflow:'hidden'}}>
+      {pages[page]}
+      <FloatingHeart/>
+      <BottomNav page={page} setPage={goTo}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
